@@ -1,4 +1,5 @@
 from functools import total_ordering
+from turtle import title
 import scrapy
 
 #the imfamous bol spider
@@ -19,11 +20,10 @@ class BolSpider(scrapy.Spider):
 
         titles  = [response.xpath('//*[@id="js_items_content"]/li/div[2]/div/div[1]/a/text()').getall()]    #get all the titles of this page
         links   = [response.xpath('//*[@id="js_items_content"]/li/div[2]/div/div[1]/a/@href').getall()]     #get all the links of this page
-        ibsn    =[response.xpath('//*[@id="js_items_content"]/li[23]/div[2]/div/ul[2]/font/li/span/text()').getall()]
-        print("The ibsn"+ibsn)
+        ibsn    = [response.xpath('//*[@id="js_items_content"]/li/div[2]/div/ul[2]/li[3]/span/text()').getall()]
         print("--------------------------next page----------------------------")    #just for the user to know what is happening in the terminal
         for i in range (len(titles[0])):                                #for every title
-            total.append([titles[0][i],ibsn[0][i]])
+            total.append([titles[0][i],links[0][i],ibsn[0][i]])
             #add the title and the link to the total list
         page+=1                                                         #increase the page number
         if page<=25:                                                    #bol.com only has 25 pages in this category
