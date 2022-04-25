@@ -21,8 +21,8 @@ class BolSpider(scrapy.Spider):
         print("--------------------------next page----------------------------")    #just for the user to know what is happening in the terminal
         for i in range (len(titles[0])):                                #for every title
             total.append([titles[0][i],links[0][i]])                    #add the title and the link to the total list
-        page+=1                                                         #increase the page number
         if page<=25:                                                    #bol.com only has 25 pages in this category 
+            page+=1                                                     #increase the page number
             url= 'https://www.bol.com/nl/nl/l/engelse-boeken-over-voeding/41026/8292/?page='+str(page)+'&12194=10-20'   #create the link for the next page
             yield scrapy.Request(url, self.parse)   #send the request to the parse function again
         else:

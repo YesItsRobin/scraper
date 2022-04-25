@@ -24,9 +24,10 @@ class SlegSpider(scrapy.Spider):
         print(len(links[0]))
         #for i in range (len(titles[0])):                                #for every title
         #    total.append([titles[0][i],links[0][i]])                    #add the title and the link to the total list. Will give error now, because more titles then links
-        page+=1                                                         #increase the page number
         if page<=15:                                                    #bol.com only has 25 pages in this category 
+            page+=1                                                         #increase the page number
             url= 'https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p='+str(page)    #create the link for the next page
             yield scrapy.Request(url, self.parse)   #send the request to the parse function again
         else:
             print(total)                            #print the total list when the spider has finished, just for show now
+            
