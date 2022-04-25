@@ -19,7 +19,9 @@ class SlegSpider(scrapy.Spider):
 
         titles  = [response.xpath('/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/span/text()').getall()]     #get all the titles of this page
         links   = [response.xpath('/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href').getall()]           #get all the links of this page
-        
+
+        #// *[ @ id = "js_items_content"] / li[1] / div[2] / div / div[1] / a get the links from bol.com inspect
+        #// *[ @ id = "mainContent"] / div / div[1] / div[5] / div[1] / div[1] / div / div / ul / font / li[3] ibsn
         print("--------------------------next page----------------------------")    #just for the user to know what is happening in the terminal
         print(len(titles[0]))   #there is a difference in titles and links, this is because some items have two titles. YET TO FIX
         print(len(links[0]))
