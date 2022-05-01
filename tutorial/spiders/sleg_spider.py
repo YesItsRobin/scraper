@@ -22,12 +22,12 @@ class ParserClass():
         self.allISBNs = []
         self.allAuthors = []
 
-        #Tfile = open("deslegteTitles.txt", "w")
-        #Ifile = open("deslegteISBNs.txt", "w")
-        #Afile = open("deslegteAutors.txt", "w")
-        #Tfile.close()
-        #Ifile.close()
-        #Afile.close()
+        Tfile = open("slegTitles.txt", "w")
+        Ifile = open("slegISBNs.txt", "w")
+        Afile = open("slegAutors.txt", "w")
+        Tfile.close()
+        Ifile.close()
+        Afile.close()
 
         self.index=0
         
@@ -40,7 +40,7 @@ class ParserClass():
         #TO-DO/HELP
         #Automate the ammount of pages possible, prob not hard
 
-        if self.getPage()<16:                                                  #deslegde only has 16 pages in this category 
+        if self.getPage()<5:                                                  #deslegde only has 16 pages in this category 
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
             yield scrapy.Request(url, self.parse_all)   #send the request to the parse function again
@@ -127,5 +127,16 @@ bolParser = ParserClass(start,paths,urlBuild)
 process.crawl(SlegSpider)
 process.start() # the script will block here until the crawling is finished
 
-print("BIG DONEZO")
 showResults(bolParser)
+Tfile = open("slegTitles.txt", "a")
+Ifile = open("slegISBNs.txt", "a")
+Afile = open("slegAutors.txt", "a")
+
+for i in range (len(bolParser.getallTitles())):
+    Tfile.write(bolParser.getallTitles[i]+',')
+    Ifile.write(bolParser.getallISBNs[i]+',')
+    Afile.write(bolParser.getallAuthors[i]+',')
+
+Tfile.close()
+Ifile.close()
+Afile.close()
