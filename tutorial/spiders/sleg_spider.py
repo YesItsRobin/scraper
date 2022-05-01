@@ -1,5 +1,5 @@
 import scrapy
-import time
+import csv
 from scrapy.crawler import CrawlerProcess
 
 
@@ -18,16 +18,10 @@ class ParserClass():
         self.urlBuild = urlBuild
         self.page = 1
         self.allLinks = []
-        self.allTitles = []
-        self.allISBNs = []
-        self.allAuthors = []
 
-        Tfile = open("slegTitles.txt", "w")
-        Ifile = open("slegISBNs.txt", "w")
-        Afile = open("slegAutors.txt", "w")
-        Tfile.close()
-        Ifile.close()
-        Afile.close()
+        self.file = open("sleg.csv", "w")
+        self.writer=csv.writer(self.file)
+        self.writer.writerow(["ISBN","Title","Author"])
 
         self.index=0
         
@@ -40,7 +34,7 @@ class ParserClass():
         #TO-DO/HELP
         #Automate the ammount of pages possible, prob not hard
 
-        if self.getPage()<5:                                                  #deslegde only has 16 pages in this category 
+        if self.getPage()<3:                                                  #deslegde only has 16 pages in this category 
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
             yield scrapy.Request(url, self.parse_all)   #send the request to the parse function again
@@ -53,13 +47,12 @@ class ParserClass():
        
 
     async def parse_single(self, response):
-        title=  response.xpath(self.getSinglePath(0)).get()
-        self.addTitle(title)
         isbn=  response.xpath(self.getSinglePath(1)).get()
-        self.addISBN(isbn)
+        title=  response.xpath(self.getSinglePath(0)).get()
         author=  response.xpath(self.getSinglePath(2)).get()
-        self.addAuthor(author)
-        #time.sleep(1)
+        data=[isbn,title,author]
+
+        self.getWriter().writerow(data)
 
         if self.getIndex()<len(self.getallLinks()):
             self.addIndex()
@@ -78,40 +71,14 @@ class ParserClass():
         return self.page
     def getallLinks(self):
         return self.allLinks
-    def getallTitles(self): 
-        return self.allTitles
-    def getallISBNs(self):
-        return self.allISBNs
-    def getallAuthors(self):
-        return self.allAuthors
     def getIndex(self):
         return self.index
-    def addTitle(self,title):
-        self.allTitles.append(title)
-    def addISBN(self,isbn):
-        self.allISBNs.append(isbn)
-    def addAuthor(self,author):
-        self.allAuthors.append(author)
+    def getWriter(self):
+        return self.writer
     def addLink(self,link):
         self.allLinks.append(link)
     def addIndex(self):
         self.index+=1
-
-def showResults(bolParser):
-        print('-----------------------done scraping individual books-----------------------\n\n\n\n\n\n\n\n\n\n')
-        print('-----------------------All links:-----------------------')
-        print(bolParser.getallLinks())
-        print('total of '+str(len(bolParser.getallLinks()))+' links')
-        print('-----------------------All titles:-----------------------')
-        print(bolParser.getallTitles())
-        print('total of '+str(len(bolParser.getallTitles()))+' titles')
-        print('-----------------------All ISBNs:-----------------------')
-        print(bolParser.getallISBNs())            
-        print('total of '+str(len(bolParser.getallISBNs()))+' ISBNs')
-        print('-----------------------All authors:-----------------------')
-        print(bolParser.getallAuthors())
-        print('total of '+str(len(bolParser.getallAuthors()))+' authors')
-        print('-----------------------done scraping-----------------------')
 
 process = CrawlerProcess(settings={
     "FEEDS": {
@@ -124,19 +91,9 @@ paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['
 urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=','','https://www.deslegte.com/']
 bolParser = ParserClass(start,paths,urlBuild)
 
+bolParser = ParserClass(start,paths,urlBuild)
+
 process.crawl(SlegSpider)
 process.start() # the script will block here until the crawling is finished
 
-showResults(bolParser)
-Tfile = open("slegTitles.txt", "a")
-Ifile = open("slegISBNs.txt", "a")
-Afile = open("slegAutors.txt", "a")
-
-for i in range (len(bolParser.getallTitles())):
-    Tfile.write(bolParser.getallTitles[i]+',')
-    Ifile.write(bolParser.getallISBNs[i]+',')
-    Afile.write(bolParser.getallAuthors[i]+',')
-
-Tfile.close()
-Ifile.close()
-Afile.close()
+bolParser.file.close()
