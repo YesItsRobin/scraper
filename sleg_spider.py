@@ -1,8 +1,11 @@
 import scrapy
 import time
 from scrapy.crawler import CrawlerProcess
-#the imfamous DeSlegte spider
 
+
+#to run: scrapy runspider sleg_spider.py
+
+#the imfamous DeSlegte spider
 class SlegSpider(scrapy.Spider):
     name = "sleg" #the name that the spider will be called in the terminal
 
@@ -19,52 +22,50 @@ class ParserClass():
         self.allISBNs = []
         self.allAuthors = []
 
-        Tfile = open("deslegteTitles.txt", "w")
-        Ifile = open("deslegteISBNs.txt", "w")
-        Afile = open("deslegteAutors.txt", "w")
-        Tfile.close()
-        Ifile.close()
-        Afile.close()
+        #Tfile = open("deslegteTitles.txt", "w")
+        #Ifile = open("deslegteISBNs.txt", "w")
+        #Afile = open("deslegteAutors.txt", "w")
+        #Tfile.close()
+        #Ifile.close()
+        #Afile.close()
 
         self.index=0
         
-    def parse_all(self,response):
+    async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
         for link in links[0]:                                #for every link
             self.addLink(link)
             #add the link to the total list
 
         #TO-DO/HELP
-        #Automate the ammount of pages possible, not hard
+        #Automate the ammount of pages possible, prob not hard
 
-        if self.getPage()<16:                                                  #bol.com only has 25 pages in this category 
+        if self.getPage()<16:                                                  #deslegde only has 16 pages in this category 
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
             yield scrapy.Request(url, self.parse_all)   #send the request to the parse function again
         else:
             print('-----------------------done scraping booklist-----------------------')
             print('-----------------------now on to the individual books:-----------------------')
-            yield scrapy.Request(self.getUrlBuild(2)+self.getallLinks()[0], self.parse_single)
+            for link in self.getallLinks():
+                yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
+            #yield scrapy.Request(self.getUrlBuild(2)+self.getallLinks()[0], self.parse_single)
        
-            #TO-DO/HELP
-            #for some reason it doesn't want to do the yield in the for loop before it ends this whole function so for now it's written in the files
-    
-    def parse_single(self, response):
-        title=response.xpath(self.getSinglePath(0)).get()
-        self.addTitle(title)
-        isbn=response.xpath(self.getSinglePath(1)).get()
-        self.addISBN(isbn)
-        author=response.xpath(self.getSinglePath(2)).get()
-        self.addAuthor(author)
-        time.sleep(1)
 
-        if self.getIndex()+1<=len(self.getallLinks()):
+    async def parse_single(self, response):
+        title=  response.xpath(self.getSinglePath(0)).get()
+        self.addTitle(title)
+        isbn=  response.xpath(self.getSinglePath(1)).get()
+        self.addISBN(isbn)
+        author=  response.xpath(self.getSinglePath(2)).get()
+        self.addAuthor(author)
+        #time.sleep(1)
+
+        if self.getIndex()<len(self.getallLinks()):
             self.addIndex()
             link=self.getallLinks()[self.getIndex()]
-            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
-        else:
-            self.showResults()        
-
+            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)       
+            
     def getResponse(self):
         return self.response
     def getMainPath(self):
