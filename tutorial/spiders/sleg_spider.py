@@ -22,6 +22,7 @@ class ParserClass():
         self.file = open("bol.csv", "w")
         self.writer=csv.writer(self.file)
         self.writer.writerow(["link", "rec1", "rec2", "etc...."])
+        self.temp=0
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
@@ -31,7 +32,7 @@ class ParserClass():
 
         #TO-DO/HELP
         #Automate the ammount of pages possible, prob not hard
-        if self.getPage()<3:                                                  #deslegde has (about) 16 pages in this category, just scraping the first 3 for faster testing
+        if self.getPage()<3:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
             print('-----------------------now on to page: '+str(self.getPage())+'-----------------------')
@@ -47,7 +48,8 @@ class ParserClass():
         #data=[self.getCurrLink(),rec1,rec2,rec3,...,etc]
 
         #self.getWriter().writerow(data)
-        pass    #remove if you add any code to this method
+        self.temp+=1
+        #pass    #remove if you add any code to this method
             
     def getResponse(self):
         return self.response
@@ -75,13 +77,13 @@ process = CrawlerProcess(settings={
 })
 
 start='https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=1&sc=popularity&so=desc'
-paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['//*[@id="book-overview"]/h1/text()','//*[@id="book-specifications"]/ul/li[3]/div[2]/text()','//*[@id="book-specifications"]/ul/li[1]/div[2]/a[1]/text()']]
+paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['---!!!put a list of Xpaths to reccomended books here!!!---']]
 urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=','','https://www.deslegte.com/']
-bolParser = ParserClass(start,paths,urlBuild)
-
 bolParser = ParserClass(start,paths,urlBuild)
 
 process.crawl(SlegSpider)
 process.start() # the script will block here until the crawling is finished
 
+print('-----------------------done-----------------------\n\n\n\n\n\n\n\n')
+print(bolParser.temp)
 bolParser.file.close()
