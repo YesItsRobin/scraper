@@ -21,6 +21,7 @@ class ParserClass():
         self.file = open("bol.csv", "w")
         self.writer=csv.writer(self.file)
         self.writer.writerow(["link", "rec1", "rec2", "etc...."])
+        self.temp=0
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
@@ -46,7 +47,8 @@ class ParserClass():
         #data=[self.getCurrLink(),rec1,rec2,rec3,...,etc]
 
         #self.getWriter().writerow(data)
-        pass    #remove if you add any code to this method
+        self.temp+=1
+        #pass    #remove if you add any code to this method
             
     def getResponse(self):
         return self.response
@@ -81,5 +83,6 @@ bolParser = ParserClass(start,paths,urlBuild)
 
 process.crawl(BolSpider)
 process.start() # the script will block here until the crawling is finished
-
+print('-----------------------done-----------------------\n\n\n\n\n\n\n\n')
+print(bolParser.temp)
 bolParser.file.close()
