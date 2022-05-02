@@ -17,47 +17,37 @@ class ParserClass():
         self.paths = paths
         self.urlBuild = urlBuild
         self.page = 1
-        self.allLinks = []
+        self.currLink = ''
 
-        self.file = open("sleg.csv", "w")
+        self.file = open("bol.csv", "w")
         self.writer=csv.writer(self.file)
-        self.writer.writerow(["ISBN","Title","Author"])
-
-        self.index=0
+        self.writer.writerow(["link", "rec1", "rec2", "etc...."])
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
         for link in links[0]:                                #for every link
-            self.addLink(link)
-            #add the link to the total list
+            self.putCurrLink(link)
+            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
 
         #TO-DO/HELP
         #Automate the ammount of pages possible, prob not hard
-
-        if self.getPage()<3:                                                  #deslegde only has 16 pages in this category 
+        if self.getPage()<3:                                                  #deslegde has (about) 16 pages in this category, just scraping the first 3 for faster testing
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
+            print('-----------------------now on to page: '+str(self.getPage())+'-----------------------')
             yield scrapy.Request(url, self.parse_all)   #send the request to the parse function again
         else:
-            print('-----------------------done scraping booklist-----------------------')
-            print('-----------------------now on to the individual books:-----------------------')
-            for link in self.getallLinks():
-                yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
-            #yield scrapy.Request(self.getUrlBuild(2)+self.getallLinks()[0], self.parse_single)
-       
+            print('-----------------------done scraping-----------------------')
 
     async def parse_single(self, response):
-        isbn=  response.xpath(self.getSinglePath(1)).get()
-        title=  response.xpath(self.getSinglePath(0)).get()
-        author=  response.xpath(self.getSinglePath(2)).get()
-        data=[isbn,title,author]
+        #recommended1=  response.xpath(self.getSinglePath(2)).get()
+        #rec2
+        #rec3
+        #etc
+        #data=[self.getCurrLink(),rec1,rec2,rec3,...,etc]
 
-        self.getWriter().writerow(data)
-
-        if self.getIndex()<len(self.getallLinks()):
-            self.addIndex()
-            link=self.getallLinks()[self.getIndex()]
-            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)       
+        #self.getWriter().writerow(data)
+        pass    #remove if you add any code to this method
             
     def getResponse(self):
         return self.response
@@ -69,16 +59,14 @@ class ParserClass():
         return self.urlBuild[nr]
     def getPage(self):
         return self.page
-    def getallLinks(self):
-        return self.allLinks
-    def getIndex(self):
-        return self.index
+    def getCurrLink(self):
+        return self.currLink
     def getWriter(self):
         return self.writer
     def addLink(self,link):
         self.allLinks.append(link)
-    def addIndex(self):
-        self.index+=1
+    def putCurrLink(self,link):
+        self.currLink=link
 
 process = CrawlerProcess(settings={
     "FEEDS": {
