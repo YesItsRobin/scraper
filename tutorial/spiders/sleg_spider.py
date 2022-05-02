@@ -22,6 +22,8 @@ class ParserClass():
         self.file = open("bol.csv", "w")
         self.writer=csv.writer(self.file)
         self.writer.writerow(["link", "rec1", "rec2", "etc...."])
+
+        self.temp=0
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
@@ -40,6 +42,7 @@ class ParserClass():
             print('-----------------------done scraping-----------------------')
 
     async def parse_single(self, response):
+        self.temp+=1
         #recommended1=  response.xpath(self.getSinglePath(2)).get()
         #rec2
         #rec3
@@ -47,7 +50,7 @@ class ParserClass():
         #data=[self.getCurrLink(),rec1,rec2,rec3,...,etc]
 
         #self.getWriter().writerow(data)
-        pass    #remove if you add any code to this method
+            #remove if you add any code to this method
             
     def getResponse(self):
         return self.response
@@ -83,5 +86,7 @@ bolParser = ParserClass(start,paths,urlBuild)
 
 process.crawl(SlegSpider)
 process.start() # the script will block here until the crawling is finished
-
+print('-----------------------done-----------------------')
+print('\n\n\n\n\n\n\n\n\n\n')
+print(bolParser.temp)
 bolParser.file.close()
