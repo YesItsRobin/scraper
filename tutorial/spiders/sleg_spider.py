@@ -75,7 +75,7 @@ process = CrawlerProcess(settings={
 })
 
 start='https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=1&sc=popularity&so=desc'
-paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['//*[@id="book-overview"]/h1/text()','//*[@id="book-specifications"]/ul/li[3]/div[2]/text()','//*[@id="book-specifications"]/ul/li[1]/div[2]/a[1]/text()']]
+paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',["list of Xpaths to the recommended books PUT HERE"]]
 urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=','','https://www.deslegte.com/']
 bolParser = ParserClass(start,paths,urlBuild)
 
