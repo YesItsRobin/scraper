@@ -4,7 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-
+import csv
 
 class TutorialItem(scrapy.Item):
     # define the fields for your item here like:
@@ -12,13 +12,13 @@ class TutorialItem(scrapy.Item):
     pass
 
 class ParserClass():
-    def __init__(self, start, paths, urlBuild):
+    def __init__(self, start, paths, urlBuild,filen):
         self.paths = paths
         self.urlBuild = urlBuild
         self.page = 1
         self.currLink = ''
 
-        self.file = open("bol.csv", "w")
+        self.file = open(filen, "w")
         self.writer=csv.writer(self.file)
         self.writer.writerow(["link", "rec1", "rec2", "etc...."])
         self.temp=0

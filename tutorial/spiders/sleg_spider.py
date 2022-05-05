@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 import scrapy
-import csv
 from scrapy.crawler import CrawlerProcess
 from tutorial.items import ParserClass
 
@@ -22,7 +21,7 @@ process = CrawlerProcess(settings={
 start='https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=1&sc=popularity&so=desc'
 paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['---!!!put a list of Xpaths to reccomended books here!!!---']]
 urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=','','https://www.deslegte.com/']
-bolParser = ParserClass(start,paths,urlBuild)
+bolParser = ParserClass(start,paths,urlBuild,"sleg.csv")
 
 process.crawl(SlegSpider)
 process.start() # the script will block here until the crawling is finished
