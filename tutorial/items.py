@@ -6,22 +6,18 @@
 import scrapy
 import csv
 
-class TutorialItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
-
+#the parser class handles the aquisition of the data
 class ParserClass():
-    def __init__(self, start, paths, urlBuild,filen):
+    def __init__(self, paths, urlBuild,filen):
         self.paths = paths
         self.urlBuild = urlBuild
         self.page = 1
         self.currLink = ''
 
-        self.file = open(filen, "w")
-        self.writer=csv.writer(self.file)
-        self.writer.writerow(["link", "rec1", "rec2", "etc...."])
-        self.temp=0
+        self.file = open(filen, "w")        #creates a csv file, if it doesn't exist yet
+        self.writer=csv.writer(self.file)   #creates a writer object, this can be called to write rows in the file
+        self.writer.writerow(["link", "rec1", "rec2", "etc...."])   #write the header
+        self.temp=0                         #can be printed to check how many books are scraped
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
@@ -48,7 +44,6 @@ class ParserClass():
 
         #self.getWriter().writerow(data)
         self.temp+=1
-        #pass    #remove if you add any code to this method
             
     def getResponse(self):
         return self.response
