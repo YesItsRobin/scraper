@@ -21,9 +21,9 @@ class ParserClass():
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
-        for link in links[0]:                                #for every link
+        for link in links[0]:                                       #for every link(book) on the page
             self.putCurrLink(link)
-            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
+            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)   #scrape the individual book page
 
         #TO-DO/HELP
         #Automate the ammount of pages possible, prob not hard
