@@ -1,6 +1,7 @@
 import scrapy
 import csv
 from scrapy.crawler import CrawlerProcess
+from parserclass import ParserClass
 
 #to run: scrapy runspider bol_spider.py
 
@@ -9,7 +10,7 @@ class BolSpider(scrapy.Spider):
     #scrapy crawl bol
 
     def start_requests(self):   #on startup, the spider will start here
-        yield scrapy.Request(start, bolParser.parse_all)
+        yield scrapy.Request(start, bolParser.parse_all) #send out the first request, the code leaves this class immediately
 
 class ParserClass():
     def __init__(self, start, paths, urlBuild):
@@ -68,7 +69,6 @@ class ParserClass():
         self.allLinks.append(link)
     def putCurrLink(self,link):
         self.currLink=link
-
 process = CrawlerProcess(settings={
     "FEEDS": {
         "items.json": {"format": "json"},
