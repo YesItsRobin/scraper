@@ -14,6 +14,7 @@ class ParserClass():
         self.page = 1
         self.currLink = ''
 
+
         self.file = open(filen, "w")        #creates a csv file, if it doesn't exist yet
         self.writer=csv.writer(self.file)   #creates a writer object, this can be called to write rows in the file
         self.writer.writerow(["link", "rec1", "rec2", "etc...."])   #write the header
@@ -36,7 +37,33 @@ class ParserClass():
             print('-----------------------done scraping-----------------------')
 
     async def parse_single(self, response):
-        #recommended1=  response.xpath(self.getSinglePath(2)).get()
+        Fields=['recommendation 1','recommendation 2','recommendation 3','recommendation 4','recommendation 5',]
+        filename="recommendations.csv"
+        dataUrlScrapped=[]
+        dataUrl=[]
+        recommend=[response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/@href').get(),
+        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[2]/div/div[2]/a/@href').get(),
+        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[3]/div/div[2]/a/@href').get(),
+        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[4]/div/div[2]/a/@href').get(),
+        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[5]/div/div[2]/a/@href').get()]
+
+        print("Check the recommended items__________________________________________")#the links work
+        for rec in recommend:
+            print("The rec is "+rec)
+            dataUrlScrapped.append(rec)# this works
+    
+        dataUrl.append(dataUrlScrapped)
+
+
+        print(dataUrl)
+        with open(filename, 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(Fields)
+            csvwriter.writerows(dataUrl)
+
+
+
+
         #rec2
         #rec3
         #etc
@@ -63,3 +90,12 @@ class ParserClass():
         self.allLinks.append(link)
     def putCurrLink(self,link):
         self.currLink=link
+    # def writte_csv(self,list):
+    #     self.list=[]
+    #     Fields = ['recommendation 1', 'recommendation 2', 'recommendation 3', 'recommendation 4', 'recommendation 5', ]
+    #     filename = "recommendations.csv"
+    #
+    #     with open(filename, 'w') as csvfile:
+    #         csvwriter = csv.writer(csvfile)
+    #         csvwriter.writerow(Fields)
+    #         csvwriter.writerows(list)

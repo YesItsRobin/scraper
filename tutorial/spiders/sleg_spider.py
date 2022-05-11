@@ -12,7 +12,7 @@ class SlegSpider(scrapy.Spider):
 
     def start_requests(self):   #on startup, the spider will start here
         yield scrapy.Request(start, slegParser.parse_all) #send out the first request, the code leaves this class immediately
-
+        yield scrapy.Request(start, slegParser.parse_single())
 process = CrawlerProcess(settings={      #Some settings for the crawler
     "FEEDS": {
         "items.json": {"format": "json"},
@@ -20,7 +20,8 @@ process = CrawlerProcess(settings={      #Some settings for the crawler
 })
 
 start='https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=1&sc=popularity&so=desc'
-paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['---!!!put a list of Xpaths to reccomended books here!!!---']]
+paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/span']# first rec link added/ same for every
+# get link href,
 urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=','','https://www.deslegte.com/']
 #creates a parser object, go to items.py to see/edit the parser class
 
