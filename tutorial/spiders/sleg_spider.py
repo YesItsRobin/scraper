@@ -12,10 +12,11 @@ class SlegSpider(scrapy.Spider):
 
     def start_requests(self):   #on startup, the spider will start here
         yield scrapy.Request(start, slegParser.parse_all) #send out the first request, the code leaves this class immediately
-        yield scrapy.Request(start, slegParser.parse_single())
+        #yield scrapy.Request(start, slegParser.parse_single())
+
 process = CrawlerProcess(settings={      #Some settings for the crawler
     "FEEDS": {
-        "items.json": {"format": "json"},
+        "sitems.json": {"format": "json"},
     },
 })
 
@@ -27,7 +28,7 @@ urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/
 
 slegParser = ParserClass(paths,urlBuild,"sleg.csv")
 
-process.crawl(slegParser)    #puts the spider in the crawler
+process.crawl(SlegSpider)    #puts the spider in the crawler
 process.start() #Runs the spider, the script will block here until the crawling is finished
 print('-----------------------done-----------------------\n\n\n\n\n\n\n\n') #this is for the user to know where the spider finishes
 slegParser.file.close() #closes the csv file

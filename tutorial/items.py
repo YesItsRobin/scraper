@@ -49,7 +49,7 @@ class ParserClass():
 
         print("Check the recommended items__________________________________________")#the links work
         for rec in recommend:
-            print("The rec is "+rec)
+            print("The rec is %s"%rec)
             dataUrlScrapped.append(rec)# this works
     
         dataUrl.append(dataUrlScrapped)
