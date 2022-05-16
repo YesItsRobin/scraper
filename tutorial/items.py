@@ -17,7 +17,7 @@ class ParserClass():
 
         self.file = open(filen, "w")        #creates a csv file, if it doesn't exist yet
         self.writer=csv.writer(self.file)   #creates a writer object, this can be called to write rows in the file
-        self.writer.writerow(["link", "rec1", "rec2", "etc...."])   #write the header
+        self.writer.writerow(["link", "rec1", "rec2", "rec3", "rec4", "rec5",])   #write the header
         self.temp=0                         #can be printed to check how many books are scraped
         
     async def parse_all(self,response):
@@ -41,25 +41,26 @@ class ParserClass():
         filename="recommendations.csv"
         dataUrlScrapped=[]
         dataUrl=[]
+        # print("The current link is" +self.urlBuild)
         recommend=[response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/@href').get(),
         response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[2]/div/div[2]/a/@href').get(),
         response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[3]/div/div[2]/a/@href').get(),
         response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[4]/div/div[2]/a/@href').get(),
-        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[5]/div/div[2]/a/@href').get()]
+        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[5]/div/div[2]/a/@href').get(),
+        response.xpath('//*[@id="mainContent"]/div/div[1]/div[4]/h1/span[1]/a/text').get()]
 
         print("Check the recommended items__________________________________________")#the links work
+
         for rec in recommend:
-            print("The rec is %s"%rec)
+
+            print("The rec is %s"%rec+"  ")
             dataUrlScrapped.append(rec)# this works
-    
+
         dataUrl.append(dataUrlScrapped)
+        self.writer.writerows(dataUrl)
 
 
-        print(dataUrl)
-        with open(filename, 'w') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(Fields)
-            csvwriter.writerows(dataUrl)
+
 
 
 
