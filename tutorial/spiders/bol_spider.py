@@ -19,7 +19,7 @@ process = CrawlerProcess(settings={
 })
 
 start='https://www.bol.com/nl/nl/l/engelse-boeken-over-voeding/41026/8292/?page=1&12194=10-20'
-paths= ['//*[@id="js_items_content"]/li/div[2]/div/div[1]/a/@href',['---!!!put a list of Xpaths to reccomended books here!!!---']] 
+paths= ['//*[@id="js_items_content"]/li/div[2]/div/div[1]/a/@href',['//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[2]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[3]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[4]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[5]/div/div[2]/a/@href']] 
 urlBuild=['https://www.bol.com/nl/nl/l/engelse-boeken-over-voeding/41026/8292/?page=','&12194=10-20','https://www.bol.com']
 
 bolParser = ParserClass(start,paths,urlBuild,"bol.csv")
@@ -27,5 +27,4 @@ bolParser = ParserClass(start,paths,urlBuild,"bol.csv")
 process.crawl(BolSpider)
 process.start() # the script will block here until the crawling is finished
 print('-----------------------done-----------------------\n\n\n\n\n\n\n\n')
-print(bolParser.temp)
 bolParser.file.close()

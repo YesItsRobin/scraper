@@ -16,21 +16,16 @@ class ParserClass():
         self.paths = paths
         self.urlBuild = urlBuild
         self.page = 1
-        self.currLink = ''
 
         self.file = open(filen, "w")
         self.writer=csv.writer(self.file)
-        self.writer.writerow(["link", "rec1", "rec2", "etc...."])
-        self.temp=0
+        self.writer.writerow(["item", "recommended1", "recommended2", "recommended3","recommended4","recommended5"])
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
         for link in links[0]:                                #for every link
-            self.putCurrLink(link)
             yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
 
-        #TO-DO/HELP
-        #Automate the ammount of pages possible, prob not hard
         if self.getPage()<3:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
@@ -40,15 +35,16 @@ class ParserClass():
             print('-----------------------done scraping-----------------------')
 
     async def parse_single(self, response):
-        #recommended1=  response.xpath(self.getSinglePath(2)).get()
-        #rec2
-        #rec3
-        #etc
-        #data=[self.getCurrLink(),rec1,rec2,rec3,...,etc]
-
-        #self.getWriter().writerow(data)
-        self.temp+=1
-        #pass    #remove if you add any code to this method
+        recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
+        recommended2=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(1)).get()
+        recommended3=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(2)).get()
+        recommended4=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(3)).get()
+        recommended5=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(4)).get()
+        data=[response.url,recommended1,recommended2,recommended3,recommended4,recommended5]
+        self.write(data)
+        print('\n\n\n\n\n\n')
+        print(data)
+        print('\n\n\n\n\n\n')
             
     def getResponse(self):
         return self.response
@@ -60,11 +56,7 @@ class ParserClass():
         return self.urlBuild[nr]
     def getPage(self):
         return self.page
-    def getCurrLink(self):
-        return self.currLink
-    def getWriter(self):
-        return self.writer
+    def write(self,text):
+        return self.writer.writerow(text)
     def addLink(self,link):
         self.allLinks.append(link)
-    def putCurrLink(self,link):
-        self.currLink=link
