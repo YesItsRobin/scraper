@@ -21,10 +21,14 @@ process = CrawlerProcess(settings={      #Some settings for the crawler
 })
 
 start='https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=1&sc=popularity&so=desc'
-paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/span']# first rec link added/ same for every
-# get link href,
+paths= ['/html/body/div[2]/div[2]/div/div[3]/ul/li/div/div/div[2]/h3/a/@href',['/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[5]/ul/li[1]/div[2]/h3/a/@href','/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[5]/ul/li[2]/div[2]/h3/a/@href','/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[5]/ul/li[3]/div[2]/h3/a/@href','/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[5]/ul/li[4]/div[2]/h3/a/@href','/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[5]/ul/li[5]/div[2]/h3/a/@href']]# first rec link added/ same for every'
+
 urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/10-20-euro/?p=','','https://www.deslegte.com/']
 #creates a parser object, go to items.py to see/edit the parser class
+
+
+
+
 
 slegParser = ParserClass(paths,urlBuild,"sleg.csv")
 

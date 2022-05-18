@@ -11,18 +11,18 @@ class ParserClass():
     def __init__(self, paths, urlBuild,filen):
         self.paths = paths
         self.urlBuild = urlBuild
-        self.page = 1
+        self.page = 0
 
         self.file = open(filen, "w",newline="")
         self.writer=csv.writer(self.file)
         self.writer.writerow(["item", "recommended1", "recommended2", "recommended3","recommended4","recommended5"])
-        
+
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
         for link in links[0]:                                #for every link
             yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
 
-        if self.getPage()<3:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
+        if self.getPage()<10:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
             print('-----------------------now on to page: '+str(self.getPage())+'-----------------------')
@@ -31,17 +31,42 @@ class ParserClass():
             print('-----------------------done scraping-----------------------')
 
     async def parse_single(self, response):
+        #try:
         recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
         recommended2=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(1)).get()
         recommended3=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(2)).get()
         recommended4=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(3)).get()
         recommended5=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(4)).get()
         data=[response.url,recommended1,recommended2,recommended3,recommended4,recommended5]
-
+        #except:
+        '''
+            try:
+                recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
+                recommended2=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(1)).get()
+                recommended3=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(2)).get()
+                recommended4=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(3)).get()
+                data=[response.url,recommended1,recommended2,recommended3,recommended4]
+            except:
+                try:
+                    recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
+                    recommended2=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(1)).get()
+                    recommended3=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(2)).get()
+                    data=[response.url,recommended1,recommended2,recommended3]
+                except:
+                    try:
+                        recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
+                        recommended2=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(1)).get()
+                        data=[response.url,recommended1,recommended2]
+                    except:
+                        try:
+                            recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
+                            data=[response.url,recommended1]
+                        except:
+                            data=[response.url]
+                            '''
         self.write(data)
-        print('\n\n\n\n\n\n')
         print(data)
-        print('\n\n\n\n\n\n')
+        print('\n\n')
             
     def getResponse(self):
         return self.response
