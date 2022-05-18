@@ -25,12 +25,12 @@ Rec5list = []
 
 # creates individual lists from the csv
 
-with open('booklist2.csv', encoding='utf-8-sig') as file:  # encoding in right form deletes the unneccesary characters
-    csv_reader = csv.reader(file, delimiter=';')
+with open('bol.csv', encoding='utf-8-sig') as file:  # encoding in right form deletes the unneccesary characters
+    csv_reader = csv.reader(file, delimiter=',')
     line_count = 0
     for row in file:
 
-        row = row.split(';')
+        row = row.split(',')
         index = 0
         for e in row:
             if index == 0:
