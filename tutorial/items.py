@@ -12,22 +12,16 @@ class ParserClass():
         self.paths = paths
         self.urlBuild = urlBuild
         self.page = 1
-        self.currLink = ''
 
-
-        self.file = open(filen, "w")        #creates a csv file, if it doesn't exist yet
-        self.writer=csv.writer(self.file)   #creates a writer object, this can be called to write rows in the file
-        self.writer.writerow(["link", "rec1", "rec2", "rec3", "rec4", "rec5",])   #write the header
-        self.temp=0                         #can be printed to check how many books are scraped
+        self.file = open(filen, "w",newline="")
+        self.writer=csv.writer(self.file)
+        self.writer.writerow(["item", "recommended1", "recommended2", "recommended3","recommended4","recommended5"])
         
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
-        for link in links[0]:                                       #for every link(book) on the page
-            self.putCurrLink(link)
-            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)   #scrape the individual book page
+        for link in links[0]:                                #for every link
+            yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
 
-        #TO-DO/HELP
-        #Automate the ammount of pages possible, prob not hard
         if self.getPage()<3:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
@@ -37,41 +31,17 @@ class ParserClass():
             print('-----------------------done scraping-----------------------')
 
     async def parse_single(self, response):
-        Fields=['recommendation 1','recommendation 2','recommendation 3','recommendation 4','recommendation 5',]
-        filename="recommendations.csv"
-        dataUrlScrapped=[]
-        dataUrl=[]
-        # print("The current link is" +self.urlBuild)
-        recommend=[response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/@href').get(),
-        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[2]/div/div[2]/a/@href').get(),
-        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[3]/div/div[2]/a/@href').get(),
-        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[4]/div/div[2]/a/@href').get(),
-        response.xpath('//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[5]/div/div[2]/a/@href').get(),
-        response.xpath('//*[@id="mainContent"]/div/div[1]/div[4]/h1/span[1]/a/text').get()]
+        recommended1=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(0)).get()
+        recommended2=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(1)).get()
+        recommended3=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(2)).get()
+        recommended4=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(3)).get()
+        recommended5=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(4)).get()
+        data=[response.url,recommended1,recommended2,recommended3,recommended4,recommended5]
 
-        print("Check the recommended items__________________________________________")#the links work
-
-        for rec in recommend:
-
-            print("The rec is %s"%rec+"  ")
-            dataUrlScrapped.append(rec)# this works
-
-        dataUrl.append(dataUrlScrapped)
-        self.writer.writerows(dataUrl)
-
-
-
-
-
-
-
-        #rec2
-        #rec3
-        #etc
-        #data=[self.getCurrLink(),rec1,rec2,rec3,...,etc]
-
-        #self.getWriter().writerow(data)
-        self.temp+=1
+        self.write(data)
+        print('\n\n\n\n\n\n')
+        print(data)
+        print('\n\n\n\n\n\n')
             
     def getResponse(self):
         return self.response
@@ -83,20 +53,7 @@ class ParserClass():
         return self.urlBuild[nr]
     def getPage(self):
         return self.page
-    def getCurrLink(self):
-        return self.currLink
-    def getWriter(self):
-        return self.writer
+    def write(self,text):
+        return self.writer.writerow(text)
     def addLink(self,link):
         self.allLinks.append(link)
-    def putCurrLink(self,link):
-        self.currLink=link
-    # def writte_csv(self,list):
-    #     self.list=[]
-    #     Fields = ['recommendation 1', 'recommendation 2', 'recommendation 3', 'recommendation 4', 'recommendation 5', ]
-    #     filename = "recommendations.csv"
-    #
-    #     with open(filename, 'w') as csvfile:
-    #         csvwriter = csv.writer(csvfile)
-    #         csvwriter.writerow(Fields)
-    #         csvwriter.writerows(list)

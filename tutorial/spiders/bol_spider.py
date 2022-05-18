@@ -20,16 +20,14 @@ process = CrawlerProcess(settings={      #Some settings for the crawler
 })
 
 start='https://www.bol.com/nl/nl/l/engelse-boeken-over-voeding/41026/8292/?page=1&12194=10-20'
-paths= ['//*[@id="js_items_content"]/li/div[2]/div/div[1]/a/@href',['---!!!put a list of Xpaths to reccomended books here!!!---']] 
+paths= ['//*[@id="js_items_content"]/li/div[2]/div/div[1]/a/@href',['//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[1]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[2]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[3]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[4]/div/div[2]/a/@href','//*[@id="mainContent"]/div/div[1]/div[5]/div[2]/div[2]/ul/li[5]/div/div[2]/a/@href']] 
 urlBuild=['https://www.bol.com/nl/nl/l/engelse-boeken-over-voeding/41026/8292/?page=','&12194=10-20','https://www.bol.com']
 #this is information specific to the bol.com website
 
 bolParser = ParserClass(paths,urlBuild,"bol.csv")
 #creates a parser object, go to items.py to see/edit the parser class
 
-process.crawl(BolSpider)    #puts the spider in the crawler
-process.start() #Runs the spider, the script will block here until the crawling is finished
-print('-----------------------done-----------------------\n\n\n\n\n\n\n\n') #this is for the user to know where the spider finishes
-bolParser.file.close() #closes the csv file
-
-#Code for mathematical part can be added here
+process.crawl(BolSpider)
+process.start() # the script will block here until the crawling is finished
+print('-----------------------done-----------------------\n\n\n\n\n\n\n\n')
+bolParser.file.close()
