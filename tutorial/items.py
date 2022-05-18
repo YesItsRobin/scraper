@@ -17,7 +17,7 @@ class ParserClass():
         self.urlBuild = urlBuild
         self.page = 1
 
-        self.file = open(filen, "w")
+        self.file = open(filen, "w",newline="")
         self.writer=csv.writer(self.file)
         self.writer.writerow(["item", "recommended1", "recommended2", "recommended3","recommended4","recommended5"])
         
@@ -41,6 +41,7 @@ class ParserClass():
         recommended4=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(3)).get()
         recommended5=  self.getUrlBuild(2)+response.xpath(self.getSinglePath(4)).get()
         data=[response.url,recommended1,recommended2,recommended3,recommended4,recommended5]
+
         self.write(data)
         print('\n\n\n\n\n\n')
         print(data)
