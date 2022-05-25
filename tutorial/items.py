@@ -11,7 +11,7 @@ class ParserClass():
     def __init__(self, paths, urlBuild,filen):
         self.paths = paths
         self.urlBuild = urlBuild
-        self.page = 0
+        self.page = 1
 
         self.file = open(filen, "w",newline="")
         self.writer=csv.writer(self.file)
@@ -19,10 +19,12 @@ class ParserClass():
 
     async def parse_all(self,response):
         links   = [response.xpath(self.getMainPath()).getall()]     #get all the links of this page
+        print(links)
         for link in links[0]:                                #for every link
+            print("--------------------------------------"+link)
             yield scrapy.Request(self.getUrlBuild(2)+link, self.parse_single)
-
-        if self.getPage()<10:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
+        
+        if self.getPage()<5:                                                  #bol.com has (about) 25 pages in this category, just scraping the first 3 for faster testing
             self.page+=1                                                       #increase the page number
             url= self.getUrlBuild(0)+str(self.getPage())+self.getUrlBuild(1)   #create the link for the next page
             print('-----------------------now on to page: '+str(self.getPage())+'-----------------------')

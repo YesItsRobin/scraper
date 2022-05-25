@@ -27,14 +27,9 @@ urlBuild=['https://www.deslegte.com/boeken/koken-reizen-vrije-tijd/koken/engels/
 #creates a parser object, go to items.py to see/edit the parser class
 
 
-
-
-
 slegParser = ParserClass(paths,urlBuild,"sleg.csv")
 
 process.crawl(SlegSpider)    #puts the spider in the crawler
 process.start() #Runs the spider, the script will block here until the crawling is finished
 print('-----------------------done-----------------------\n\n\n\n\n\n\n\n') #this is for the user to know where the spider finishes
 slegParser.file.close() #closes the csv file
-
-#Code for mathematical part can be added here
